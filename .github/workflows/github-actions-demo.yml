@@ -1,0 +1,15 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push]
+jobs:
+  Experiment-Build:
+    runs-on: rockylinux-8
+    steps:
+      - run: echo "Build stage"
+      - run: echo "Created on build stage" > /file
+      
+  Experiment-Deploy:
+    runs-on: rockylinux-8
+    steps:
+      - run: echo "Deploy stage"
+      - run: cat /file
