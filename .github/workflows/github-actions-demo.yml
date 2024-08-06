@@ -10,6 +10,7 @@ jobs:
       
   Experiment-Deploy:
     runs-on: self-hosted
+    needs: Experiment-Build
     steps:
       - run: echo "Deploy stage"
       - run: cat ./file
