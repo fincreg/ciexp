@@ -6,10 +6,10 @@ jobs:
     runs-on: self-hosted
     steps:
       - run: echo "Build stage"
-      - run: echo "Created on build stage" > /file
+      - run: echo "Created on build stage" > ./file
       
   Experiment-Deploy:
     runs-on: self-hosted
     steps:
       - run: echo "Deploy stage"
-      - run: cat /file
+      - run: cat ./file
