@@ -1,0 +1,16 @@
+name: Actions Demo RockyLinux
+run-name: Build demo for RockyLinux 🚀
+on: [push]
+jobs:
+  Project-RockyLinux8-Build:
+    runs-on: self-hosted
+    steps:
+      - run: echo "Build stage"
+      - run: echo "Created on build stage" > ./file
+      
+  Project-RockyLinux8-Deploy:
+    runs-on: self-hosted
+    needs: Project-RockyLinux8-Build
+    steps:
+      - run: echo "Deploy stage"
+      - run: cat ./file
