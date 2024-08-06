@@ -3,14 +3,14 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
   Experiment-Build:
-    runs-on: rockylinux-8
+    runs-on: self-hosted
     steps:
       - run: echo "Build stage"
       - run: cat /file
       - run: echo "Created on build stage" > /file
       
   Experiment-Deploy:
-    runs-on: rockylinux-8
+    runs-on: self-hosted
     steps:
       - run: echo "Deploy stage"
       - run: cat /file
