@@ -1,16 +1,16 @@
-name: Actions Demo CentOS
-run-name: Build demo for CentOS 🚀
-on: [push]
-jobs:
-  Project-CentOS7-Build:
-    runs-on: self-hosted
-    steps:
-      - run: echo "Build stage"
-      - run: echo "Created on build stage" > ./file
+# name: Actions Demo CentOS
+# run-name: Build demo for CentOS 🚀
+# on: [push]
+# jobs:
+#   Project-CentOS7-Build:
+#     runs-on: self-hosted
+#     steps:
+#       - run: echo "Build stage"
+#       - run: echo "Created on build stage" > ./file
       
-  Project-CentOS7-Deploy:
-    runs-on: self-hosted
-    needs: Project-CentOS7-Build
-    steps:
-      - run: echo "Deploy stage"
-      - run: cat ./file
+#   Project-CentOS7-Deploy:
+#     runs-on: self-hosted
+#     needs: Project-CentOS7-Build
+#     steps:
+#       - run: echo "Deploy stage"
+#       - run: cat ./file

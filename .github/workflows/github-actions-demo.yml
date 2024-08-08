@@ -2,28 +2,40 @@ name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
-  Experiment-Build1:
+  Experiment-Use-Container:
     runs-on: self-hosted
+    container:
+      image: rl8:8
     steps:
-      - run: echo "Build stage"
-      - run: echo "Created on build stage" > ./file
-      
-  Experiment-Deploy1:
-    runs-on: self-hosted
-    needs: Experiment-Build1
-    steps:
-      - run: echo "Deploy stage"
-      - run: cat ./file
+      - name: Check running container
+        run: uname -a
+        run: cat /etc/redhat-release
 
-  Experiment-Build2:
-    runs-on: self-hosted
-    steps:
-      - run: echo "Build stage"
-      - run: echo "Created on build stage" > ./file
+
+
+
+  # Experiment-Build1:
+  #   runs-on: self-hosted
+  #   steps:
+  #     - run: echo "Build stage"
+  #     - run: echo "Created on build stage" > ./file
       
-  Experiment-Deploy2:
-    runs-on: self-hosted
-    needs: Experiment-Build2
-    steps:
-      - run: echo "Deploy stage"
-      - run: cat ./file
+  # Experiment-Deploy1:
+  #   runs-on: self-hosted
+  #   needs: Experiment-Build1
+  #   steps:
+  #     - run: echo "Deploy stage"
+  #     - run: cat ./file
+
+  # Experiment-Build2:
+  #   runs-on: self-hosted
+  #   steps:
+  #     - run: echo "Build stage"
+  #     - run: echo "Created on build stage" > ./file
+      
+  # Experiment-Deploy2:
+  #   runs-on: self-hosted
+  #   needs: Experiment-Build2
+  #   steps:
+  #     - run: echo "Deploy stage"
+  #     - run: cat ./file
