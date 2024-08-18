@@ -14,6 +14,8 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      - name: Tree before
+        run: tree /root $GITHUB_WORKSPACE
       - name: Checkout project
         uses: actions/checkout@v3
         with:
@@ -28,7 +30,7 @@ jobs:
         run: dnf builddep -y $GITHUB_WORKSPACE/$SPEC --enablerepo powertools
       # - name: 
       #   run: rpmbuild -ba --define --define $SPEC
-      - name: Tree
+      - name: Tree after
         run: tree /root $GITHUB_WORKSPACE
 
 
