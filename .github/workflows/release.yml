@@ -16,15 +16,8 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-        - name: Show uri
-          run: echo https://api.github.com//repos/$GITHUB_REPOSITORY/releases/$GITHUB_REF_TYPE/$GITHUB_REF_NAME
-        - name: Show export
-          run: export
-        - name: Install jq
-          run: dnf install -y jq
-        - name: Get Release Notes
+        - name: Print some context
           run: |
-                curl -s \
-                -H "Accept: application/vnd.github.v3+json" \
-                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                https://api.github.com//repos/$GITHUB_REPOSITORY/releases/$GITHUB_REF_TYPE/$GITHUB_REF_NAME | jq -r '.body'
+                echo ${{ github.event.release }}
+                echo ${{ github.event.release.body }}
+                echo ${{ github.event.release.tag_name }}
