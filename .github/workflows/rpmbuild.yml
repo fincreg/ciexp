@@ -9,8 +9,7 @@ jobs:
     env:
       SPEC: experiment.spec
     container:
-      image: rockylinux:8-rpmbuild
-      pull: if-not-present
+      image: ghcr.io/fincreg/rockylinux:8-rpmbuild
     steps:
       - name: Check working directory
         run: pwd
