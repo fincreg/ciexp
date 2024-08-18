@@ -27,7 +27,7 @@ jobs:
           run: mkdir -p $GITHUB_WORKSPACE/{SPECS,SOURCES,BUILD,BUILDROOT,RPMS,SRPMS}
 
         - name: Bump version
-          run: rpmdev-bumpspec -n ${{ github.event.release.tag_name }} -c ${{ github.event.release.body }} $GITHUB_WORKSPACE/$SPEC
+          run: rpmdev-bumpspec -n "${{ github.event.release.tag_name }}" -c "${{ github.event.release.body }}" $GITHUB_WORKSPACE/$SPEC
 
         - name: Install dependencies
           run: dnf builddep -y $GITHUB_WORKSPACE/$SPEC --enablerepo powertools
