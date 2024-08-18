@@ -14,25 +14,19 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - name: Tree before
-        run: tree /root $GITHUB_WORKSPACE
       - name: Checkout project
         uses: actions/checkout@v3
-        with:
-          path: /root/rpmbuild/BUILD/experiment
-      - name: Move SPEC
-        run: mv /root/rpmbuild/BUILD/experiment/experiment.spec /root/rpmbuild/SPECS/experiment.spec
-      - name: Check working directory
-        run: pwd
-      - name: Check working user
-        run: whoami
       # - name: Create structure
-      #   run: mkdir -p ~/rpmbuild/{SPECS,SOURCES,BUILD,BUILDROOT,RPMS,SRPMS}
+      #   run: mkdir -p $GITHUB_WORKSPACE/{SPECS,SOURCES,BUILD,BUILDROOT,RPMS,SRPMS}
       - name: Install dependencies
-        run: dnf builddep -y $SPEC --enablerepo powertools
+        run: dnf builddep -y $GITHUB_WORKSPACE/$SPEC --enablerepo powertools
       # - name: 
-      #   run: rpmbuild -ba --define --define $SPEC
-      - name: Tree after
-        run: tree /root $GITHUB_WORKSPACE
+      #   run: >
+      #         rpmbuild -ba
+      #         --define "_topdir $GITHUB_WORKSPACE/rpmbuild"
+      #         --define "_builddir $GITHUB_WORKSPACE"
+      #         $GITHUB_WORKSPACE/$SPEC
+      - name: Tree
+        run: tree $GITHUB_WORKSPACE
 
 
