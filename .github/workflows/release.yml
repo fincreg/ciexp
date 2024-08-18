@@ -17,12 +17,14 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
         - name: Show uri
-          run: echo $GITHUB_SERVER_URL/repos/$GITHUB_REPOSITORY/releases/${{ github.event.release.id }}
+          run: echo https://api.github.com//repos/$GITHUB_REPOSITORY/releases/$GITHUB_REF_TYPE/$GITHUB_REF_NAME
         - name: Show export
           run: export
-        # - name: Get Release Notes
-        #   run: |
-        #         curl -s \
-        #         -H "Accept: application/vnd.github.v3+json" \
-        #         -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-        #         $GITHUB_SERVER_URL/repos/$GITHUB_REPOSITORY/releases/${{ github.event.release.id }}'
+        - name: Install jq
+          run: dnf install -y jq
+        - name: Get Release Notes
+          run: |
+                curl -s \
+                -H "Accept: application/vnd.github.v3+json" \
+                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                https://api.github.com//repos/$GITHUB_REPOSITORY/releases/$GITHUB_REF_TYPE/$GITHUB_REF_NAME | jq -r '.body'
