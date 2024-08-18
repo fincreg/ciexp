@@ -5,11 +5,12 @@ jobs:
   Experiment-Use-Container:
     runs-on: self-hosted
     container:
-      image: rl8:8
+      image: rockylinux:8
     steps:
       - name: Check running container
         run: uname -a
       - run: cat /etc/redhat-release
+      - run: ls -la /home
 
 
 
