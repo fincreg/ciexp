@@ -20,7 +20,7 @@ echo "#!/bin/bash\n\necho EXECUTED" > $RPM_BUILD_DIR/executable
 
 %install
 install -d $RPM_BUILD_ROOT/opt/exp
-install -m 755  $RPM_BUILD_ROOT/opt/exp/executable
+install -m 755 $RPM_BUILD_DIR/executable $RPM_BUILD_ROOT/opt/exp/executable
 
 %clean
 rm -rf $RPM_BUILD_ROOT
