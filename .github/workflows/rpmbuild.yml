@@ -16,16 +16,16 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
-      # - name: Create structure
-      #   run: mkdir -p $GITHUB_WORKSPACE/{SPECS,SOURCES,BUILD,BUILDROOT,RPMS,SRPMS}
+      - name: Create structure
+        run: mkdir -p $GITHUB_WORKSPACE/{SPECS,SOURCES,BUILD,BUILDROOT,RPMS,SRPMS}
       - name: Install dependencies
         run: dnf builddep -y $GITHUB_WORKSPACE/$SPEC --enablerepo powertools
-      # - name: 
-      #   run: >
-      #         rpmbuild -ba
-      #         --define "_topdir $GITHUB_WORKSPACE/rpmbuild"
-      #         --define "_builddir $GITHUB_WORKSPACE"
-      #         $GITHUB_WORKSPACE/$SPEC
+      - name: 
+        run: >
+              rpmbuild -ba
+              --define "_topdir $GITHUB_WORKSPACE/rpmbuild"
+              --define "_builddir $GITHUB_WORKSPACE"
+              $GITHUB_WORKSPACE/$SPEC
       - name: Tree
         run: tree $GITHUB_WORKSPACE
 
