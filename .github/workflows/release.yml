@@ -1,9 +1,9 @@
 name: Build RPM
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref_name }}
-  cancel-in-progress: true
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.ref_name }}
+#   cancel-in-progress: true
 
 on: 
   release:
@@ -28,6 +28,9 @@ jobs:
 
         - name: Bump version
           run: rpmdev-bumpspec -n "${{ github.event.release.tag_name }}" -c "${{ github.event.release.body }}" $GITHUB_WORKSPACE/$SPEC
+        
+        - name: Show spec
+          run: cat $GITHUB_WORKSPACE/$SPEC
 
         - name: Install dependencies
           run: dnf builddep -y $GITHUB_WORKSPACE/$SPEC --enablerepo powertools
