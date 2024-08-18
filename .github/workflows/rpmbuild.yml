@@ -6,6 +6,8 @@ on:
 jobs:
   Build:
     runs-on: self-hosted
+    env:
+      SPEC: experiment.spec
     container:
       image: rockylinux:8
     steps:
@@ -14,11 +16,12 @@ jobs:
       - name: Check working user
         run: whoami
       # - name: Create structure
-      #   run: mkdir -p /home/runner/rpmbuild/{SPECS,SOURCES,BUILD,BUILDROOT,RPMS,SRPMS}
-      # - name: Install dependencies
-      #   run: dnf builddep -y $SPEC --enablerepo powertools
+      #   run: mkdir -p ~/rpmbuild/{SPECS,SOURCES,BUILD,BUILDROOT,RPMS,SRPMS}
+      - name: Install dependencies
+        run: dnf builddep -y $GITHUB_WORKSPACE/$SPEC --enablerepo powertools
       # - name: 
       #   run: rpmbuild -ba --define --define $SPEC
-      # - name: 
+      - name: Tree
+        run: tree /root $GITHUB_WORKSPACE
 
 
