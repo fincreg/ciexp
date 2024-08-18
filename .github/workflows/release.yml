@@ -1,9 +1,13 @@
-
 name: Build RPM
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
 on: 
   release:
-    types: [published]
+    types: [published, created]
 
 jobs:
   Build-And-Push:
@@ -16,8 +20,31 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-        - name: Print some context
-          run: |
-                echo ${{ github.event.release }}
-                echo ${{ github.event.release.body }}
-                echo ${{ github.event.release.tag_name }}
+        - name: Checkout project
+          uses: actions/checkout@v3
+
+        - name: Create rpmbuild structure
+          run: mkdir -p $GITHUB_WORKSPACE/{SPECS,SOURCES,BUILD,BUILDROOT,RPMS,SRPMS}
+
+        - name: Bump version
+          run: rpmdev-bumpspec -n ${{ github.event.release.tag_name }} -c ${{ github.event.release.body }} $GITHUB_WORKSPACE/$SPEC
+
+        - name: Install dependencies
+          run: dnf builddep -y $GITHUB_WORKSPACE/$SPEC --enablerepo powertools
+
+        - name: Build RPM/SRPM packages
+          run: >
+                rpmbuild -ba
+                --define "_topdir $GITHUB_WORKSPACE/rpmbuild"
+                --define "_builddir $GITHUB_WORKSPACE"
+                $GITHUB_WORKSPACE/$SPEC
+
+        - name: Show build packages
+          run: tree $GITHUB_WORKSPACE/{RPMS/SRPMS}
+
+        # - name: Upload package artifacts
+        #   uses: actions/upload-artifact@v4
+        #   with:
+        #     path: |
+        #       rpmbuild/RPMS/x86_64/**
+        #       rpmbuild/SRPMS/**
