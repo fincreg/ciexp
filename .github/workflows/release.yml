@@ -18,9 +18,11 @@ jobs:
     steps:
         - name: Show uri
           run: echo $GITHUB_SERVER_URL/repos/$GITHUB_REPOSITORY/releases/${{ github.event.release.id }}
-        - name: Get Release Notes
-          run: |
-                curl -s \
-                -H "Accept: application/vnd.github.v3+json" \
-                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                $GITHUB_SERVER_URL/repos/$GITHUB_REPOSITORY/releases/${{ github.event.release.id }}'
+        - name: Show export
+          run: export
+        # - name: Get Release Notes
+        #   run: |
+        #         curl -s \
+        #         -H "Accept: application/vnd.github.v3+json" \
+        #         -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+        #         $GITHUB_SERVER_URL/repos/$GITHUB_REPOSITORY/releases/${{ github.event.release.id }}'
