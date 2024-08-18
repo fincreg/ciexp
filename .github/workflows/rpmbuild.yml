@@ -20,7 +20,7 @@ jobs:
         run: mkdir -p $GITHUB_WORKSPACE/{SPECS,SOURCES,BUILD,BUILDROOT,RPMS,SRPMS}
       - name: Install dependencies
         run: dnf builddep -y $GITHUB_WORKSPACE/$SPEC --enablerepo powertools
-      - name: 
+      - name: Build RPM/SRPM
         run: >
               rpmbuild -ba
               --define "_topdir $GITHUB_WORKSPACE/rpmbuild"
@@ -28,5 +28,11 @@ jobs:
               $GITHUB_WORKSPACE/$SPEC
       - name: Tree
         run: tree $GITHUB_WORKSPACE
+      - uses: actions/upload-artifact@v4
+        with:
+          path: |
+            rpmbuild/RPMS/x86_64
+            rpmbuild/SRPMS
+
 
 
