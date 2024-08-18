@@ -1,0 +1,24 @@
+name: Build RPM
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: 
+  push:
+    branches: [ master ]
+jobs:
+  Build:
+    runs-on: self-hosted
+    container:
+      image: rockylinux:8
+    steps:
+      - name: Check working directory
+        run: pwd
+      - name: Check working user
+        run: whoami
+      # - name: Create structure
+      #   run: mkdir -p /home/runner/rpmbuild/{SPECS,SOURCES,BUILD,BUILDROOT,RPMS,SRPMS}
+      # - name: Install dependencies
+      #   run: dnf builddep -y $SPEC --enablerepo powertools
+      # - name: 
+      #   run: rpmbuild -ba --define --define $SPEC
+      # - name: 
+
+
