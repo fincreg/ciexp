@@ -17,10 +17,10 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
         - name: Show uri
-          run: echo $GITHUB_SERVER_URL/repos/$GITHUB_REPOSITORY/releases/${RELEASE_ID}
+          run: echo $GITHUB_SERVER_URL/repos/$GITHUB_REPOSITORY/releases/${{ github.event.release.id }}
         - name: Get Release Notes
           run: |
                 curl -s \
                 -H "Accept: application/vnd.github.v3+json" \
                 -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                $GITHUB_SERVER_URL/repos/$GITHUB_REPOSITORY/releases/${RELEASE_ID} | jq -r '.body'
+                $GITHUB_SERVER_URL/repos/$GITHUB_REPOSITORY/releases/${{ github.event.release.id }}'
