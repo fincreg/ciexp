@@ -3,6 +3,7 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: 
   push:
     branches: [ master ]
+    paths-ignore: [ ".github/workflows/release.yml" ]
 jobs:
   Build:
     runs-on: self-hosted

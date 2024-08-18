@@ -1,0 +1,26 @@
+
+name: Build RPM
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: 
+  release:
+    types: [published]
+
+jobs:
+  Build-And-Push:
+    runs-on: self-hosted
+    env:
+      SPEC: experiment.spec
+    container:
+      image: ghcr.io/fincreg/rockylinux:8-rpmbuild
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+        - name: Show uri
+          run: echo $GITHUB_SERVER_URL/repos/$GITHUB_REPOSITORY/releases/${RELEASE_ID}
+        - name: Get Release Notes
+          run: |
+                curl -s \
+                -H "Accept: application/vnd.github.v3+json" \
+                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                $GITHUB_SERVER_URL/repos/$GITHUB_REPOSITORY/releases/${RELEASE_ID} | jq -r '.body'
