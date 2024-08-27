@@ -1,4 +1,4 @@
-name: Deploy RPM
+name: Deploy non-production RPM
 on: 
   release:
     types: [prereleased]
