@@ -23,7 +23,7 @@ jobs:
 
         - name: Extract version and release from tag
           run: >
-                if [[ ${{ github.event.release.tag_name }} =~ ^live([0-9]+\.[0-9]+\.[0-9]+)(-.+)?$ ]]; then
+                if [[ ${{ github.event.release.tag_name }} =~ ^([0-9]+\.[0-9]+\.[0-9]+)(-.+)?$ ]]; then
                   VERSION="${BASH_REMATCH[1]}"
                   RELEASE="${BASH_REMATCH[2]:1}"
                   if [ -z "$RELEASE" ]; then RELEASE="1"; fi
