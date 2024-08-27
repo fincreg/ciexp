@@ -27,13 +27,15 @@ jobs:
                   VERSION="${BASH_REMATCH[1]}"
                   RELEASE="${BASH_REMATCH[2]:1}"
                   if [ -z "$RELEASE" ]; then RELEASE="1"; fi
+                  echo "VERSION=$VERSION" >> $GITHUB_ENV
+                  echo "RELEASE=$RELEASE" >> $GITHUB_ENV
                 fi
 
         - name: Bump version
           run: >
                 rpmdev-bumpspec 
                 -u "${{ github.actor }}"
-                -n "${VERSION}-${RELEASE}" 
+                -n "${{ env.VERSION }}-${{ env.RELEASE }}" 
                 -c "${{ github.event.release.body }}" 
                 $GITHUB_WORKSPACE/$SPEC
         
