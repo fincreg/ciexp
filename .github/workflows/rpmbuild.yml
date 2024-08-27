@@ -1,5 +1,4 @@
-name: Build RPM
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+name: Auto Build RPM
 on: 
   push:
     branches: [ master ]
@@ -16,31 +15,24 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - name: Checkout project
-        uses: actions/checkout@v3
+        - name: Checkout project
+          uses: actions/checkout@v3
 
-      - name: Create rpmbuild structure
-        run: mkdir -p $GITHUB_WORKSPACE/{SPECS,SOURCES,BUILD,BUILDROOT,RPMS,SRPMS}
-
-      - name: Install dependencies
-        run: dnf builddep -y $GITHUB_WORKSPACE/$SPEC --enablerepo powertools
-
-      - name: Build RPM/SRPM packages
-        run: >
-              rpmbuild -ba
-              --define "_topdir $GITHUB_WORKSPACE/rpmbuild"
-              --define "_builddir $GITHUB_WORKSPACE"
-              $GITHUB_WORKSPACE/$SPEC
-
-      - name: Show build packages
-        run: tree $GITHUB_WORKSPACE/{RPMS/SRPMS}
+        - name: Bump version
+          run: rpmdev-bumpspec -n "echo $(${{ github.sha }} | cut -c1-7)" $GITHUB_WORKSPACE/$SPEC
         
-      - name: Upload package artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          path: |
-            rpmbuild/RPMS/x86_64/**
-            rpmbuild/SRPMS/**
+        - name: Show spec
+          run: cat $GITHUB_WORKSPACE/$SPEC
 
+        - name: Install dependencies
+          run: dnf builddep -y $GITHUB_WORKSPACE/$SPEC --enablerepo powertools
 
+        - name: Build RPM/SRPM packages
+          run: >
+                rpmbuild -bb
+                --define "_topdir $GITHUB_WORKSPACE/rpmbuild"
+                --define "_builddir $GITHUB_WORKSPACE"
+                $GITHUB_WORKSPACE/$SPEC
 
+        - name: Show build packages
+          run: tree $GITHUB_WORKSPACE/rpmbuild/RPMS
