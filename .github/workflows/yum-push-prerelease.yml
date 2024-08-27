@@ -22,7 +22,12 @@ jobs:
           run: mkdir -p $GITHUB_WORKSPACE/{SPECS,SOURCES,BUILD,BUILDROOT,RPMS,SRPMS}
 
         - name: Bump version
-          run: rpmdev-bumpspec -n "${{ github.event.release.tag_name }}" -c "${{ github.event.release.body }}" $GITHUB_WORKSPACE/$SPEC
+          run: >
+                rpmdev-bumpspec 
+                -u "${{ github.actor }}"
+                -n "${{ github.event.release.tag_name }}" 
+                -c "${{ github.event.release.body }}" 
+                $GITHUB_WORKSPACE/$SPEC
         
         - name: Show spec
           run: cat $GITHUB_WORKSPACE/$SPEC
