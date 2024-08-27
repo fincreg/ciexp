@@ -4,7 +4,7 @@ on:
     types: [published]
 
 jobs:
-  Build-And-Push:
+  Perform RPM build and deploy:
     runs-on: self-hosted
     env:
       SPEC: experiment.spec
