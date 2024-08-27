@@ -5,7 +5,7 @@ on:
     paths-ignore: [ ".github/workflows/release.yml" ]
     
 jobs:
-  Perform RPM build:
+  Build-RPM:
     runs-on: self-hosted
     env:
       SPEC: experiment.spec

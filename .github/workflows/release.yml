@@ -1,10 +1,10 @@
-name: Perform RPM release
+name: Deploy RPM
 on: 
   release:
     types: [published]
 
 jobs:
-  Perform RPM build and deploy:
+  Deploy-RPM:
     runs-on: self-hosted
     env:
       SPEC: experiment.spec
