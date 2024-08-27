@@ -1,12 +1,13 @@
 name: Deploy RPM
 on: 
   release:
-    types: [published]
+    types: [released]
 
 jobs:
   Deploy-RPM:
     runs-on: self-hosted
     env:
+      YUM_REPO: live
       SPEC: experiment.spec
     container:
       image: ghcr.io/fincreg/rockylinux:8-rpmbuild
@@ -39,9 +40,12 @@ jobs:
         - name: Show build packages
           run: tree $GITHUB_WORKSPACE/rpmbuild/{RPMS/SRPMS}
 
-        - name: Upload package artifacts
-          uses: actions/upload-artifact@v4
-          with:
-            path: |
-              rpmbuild/RPMS/x86_64/**
-              rpmbuild/SRPMS/**
+        - name: Deploy packages
+          run: echo "Deploying to $YUM_REPO repository"
+
+        # - name: Upload package artifacts
+        #   uses: actions/upload-artifact@v4
+        #   with:
+        #     path: |
+        #       rpmbuild/RPMS/x86_64/**
+        #       rpmbuild/SRPMS/**
