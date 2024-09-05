@@ -24,13 +24,11 @@ jobs:
                 echo $YUM_REPO_YUM1EXP_LIVE_R8 > /etc/yum.repos.d/yum-yum1exp-live.repo
                 echo $YUM_REPO_YUM1EXP_DEV_R8 > /etc/yum.repos.d/yum-yum1exp-dev.repo
 
-        - name: Validations
-          run: |
-                cat /etc/yum.conf
-                cat /etc/yum.repos.d/cert.pem
-                cat /etc/yum.repos.d/key.pem
-                cat /etc/yum.repos.d/yum-yum1exp-live.repo
-                cat /etc/yum.repos.d/yum-yum1exp-dev.repo
+        - run: cat /etc/yum.conf
+        - run: cat /etc/yum.repos.d/cert.pem
+        - run: cat /etc/yum.repos.d/key.pem
+        - run: cat /etc/yum.repos.d/yum-yum1exp-live.repo
+        - run: cat /etc/yum.repos.d/yum-yum1exp-dev.repo
 
 
         # - name: Checkout project
