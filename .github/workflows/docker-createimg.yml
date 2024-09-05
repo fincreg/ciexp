@@ -19,7 +19,7 @@ jobs:
               uses: docker/metadata-action@v5
               with:
                 images: |
-                    name/app
+                    ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
                 tags: |
                     type=raw,value=${{ github.head_ref }},prefix=verify-
 
