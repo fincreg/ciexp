@@ -21,8 +21,8 @@ jobs:
                 echo 
                 echo "${{ secrets.YUMREPO_CERT }}" | base64 -d > /etc/yum.repos.d/cert.pem
                 echo "${{ secrets.YUMREPO_KEY }}" | base64 -d > /etc/yum.repos.d/key.pem
-                echo "${{ env.YUM_REPO_YUM1EXP_LIVE_R8 }}" | base64 -d > /etc/yum.repos.d/yum-yum1exp-live.repo
-                echo "${{ env.YUM_REPO_YUM1EXP_DEV_R8 }}" | base64 -d > /etc/yum.repos.d/yum-yum1exp-dev.repo
+                echo "${{ env.YUM_REPO_YUM1EXP_LIVE_R8 }}" > /etc/yum.repos.d/yum-yum1exp-live.repo
+                echo "${{ env.YUM_REPO_YUM1EXP_DEV_R8 }}" > /etc/yum.repos.d/yum-yum1exp-dev.repo
 
         - run: cat /etc/yum.conf
         - run: cat /etc/yum.repos.d/cert.pem
