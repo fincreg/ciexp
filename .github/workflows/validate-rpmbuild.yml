@@ -1,43 +1,61 @@
 name: Auto Build RPM
 on: 
   push:
-    branches: [ master ]
-    paths-ignore: [ ".github/workflows/release.yml" ]
-    
+    branches: [ onpush ]
+
 jobs:
-  Build-RPM:
+  experiment:
     runs-on: self-hosted
-    env:
-      SPEC: experiment.spec
     container:
       image: ghcr.io/fincreg/rockylinux:8-rpmbuild
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-        - name: Checkout project
-          uses: actions/checkout@v3
+        - name: Preps
+          run: |
+                cat <<EOF >>/etc/yum.conf
+                sslclientcert=/etc/yum.repos.d/cert.pem
+                sslclientkey=/etc/yum.repos.d/key.pem
+                EOF
+                echo 
+                echo $YUMREPO_CERT > /etc/yum.repos.d/cert.pem
+                echo $YUMREPO_KEY > /etc/yum.repos.d/key.pem
+                echo $YUM_REPO_YUM1EXP_LIVE_R8 > /etc/yum.repos.d/yum-yum1exp-live.repo
+                echo $YUM_REPO_YUM1EXP_DEV_R8 > /etc/yum.repos.d/yum-yum1exp-dev.repo
 
-        - name: Bump version
-          run: >
-                rpmdev-bumpspec 
-                -u "${{ github.event.head_commit.author.name }} <${{ github.event.head_commit.author.email }}>"
-                -n "1-${{ github.ref_name }}.${{ github.run_number }}" 
-                -c "${{ github.sha }} : ${{ github.event.head_commit.message }}" 
-                $GITHUB_WORKSPACE/$SPEC
+        - name: Validations
+          run: |
+                cat /etc/yum.conf
+                cat /etc/yum.repos.d/cert.pem
+                cat /etc/yum.repos.d/key.pem
+                cat /etc/yum.repos.d/yum-yum1exp-live.repo
+                cat /etc/yum.repos.d/yum-yum1exp-dev.repo
 
-        - name: Show spec
-          run: cat $GITHUB_WORKSPACE/$SPEC
+
+        # - name: Checkout project
+        #   uses: actions/checkout@v3
+
+        # - name: Bump version
+        #   run: >
+        #         rpmdev-bumpspec 
+        #         -u "${{ github.event.head_commit.author.name }} <${{ github.event.head_commit.author.email }}>"
+        #         -n "1-${{ github.ref_name }}.${{ github.run_number }}" 
+        #         -c "${{ github.sha }} : ${{ github.event.head_commit.message }}" 
+        #         $GITHUB_WORKSPACE/$SPEC
+
+        # - name: Show spec
+        #   run: cat $GITHUB_WORKSPACE/$SPEC
 
         # - name: Install dependencies
         #   run: dnf builddep -y $GITHUB_WORKSPACE/$SPEC --enablerepo powertools
 
-        - name: Build RPM/SRPM packages
-          run: >
-                rpmbuild -bb
-                --define "_topdir $GITHUB_WORKSPACE/rpmbuild"
-                --define "_builddir $GITHUB_WORKSPACE"
-                $GITHUB_WORKSPACE/$SPEC
+        # - name: Build RPM/SRPM packages
+        #   run: >
+        #         rpmbuild -bb
+        #         --define "_topdir $GITHUB_WORKSPACE/rpmbuild"
+        #         --define "_builddir $GITHUB_WORKSPACE"
+        #         $GITHUB_WORKSPACE/$SPEC
 
-        - name: Show build packages
-          run: tree $GITHUB_WORKSPACE/rpmbuild/RPMS
+        # - name: Show build packages
+        #   run: tree $GITHUB_WORKSPACE/rpmbuild/RPMS
