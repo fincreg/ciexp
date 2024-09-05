@@ -19,8 +19,8 @@ jobs:
                 sslclientkey=/etc/yum.repos.d/key.pem
                 EOF
                 echo 
-                echo $YUMREPO_CERT > /etc/yum.repos.d/cert.pem
-                echo $YUMREPO_KEY > /etc/yum.repos.d/key.pem
+                echo -n $YUMREPO_CERT | base64 -d > /etc/yum.repos.d/cert.pem
+                echo -n $YUMREPO_KEY | base64 -d > /etc/yum.repos.d/key.pem
                 echo $YUM_REPO_YUM1EXP_LIVE_R8 > /etc/yum.repos.d/yum-yum1exp-live.repo
                 echo $YUM_REPO_YUM1EXP_DEV_R8 > /etc/yum.repos.d/yum-yum1exp-dev.repo
 
