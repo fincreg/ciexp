@@ -18,11 +18,25 @@ jobs:
                 sslclientcert=/etc/yum.repos.d/cert.pem
                 sslclientkey=/etc/yum.repos.d/key.pem
                 EOF
-                echo 
+                echo
+                cat <<EOF > /etc/yum.repos.d/yum-yum1exp-live.repo
+                [yum-yum1exp-live]
+                name=Yum1Exp RPM Repository (Live)
+                baseurl=https://yum1exp.hostopia.com/yum/rpms/r10k/mail_master/repos/mail/live/rocky/8
+                enabled=1
+                sslverify=0
+                gpgcheck=0
+                EOF
+                cat <<EOF > /etc/yum.repos.d/yum-yum1exp-dev.rep
+                [yum-yum1exp-live]
+                name=Yum1Exp RPM Repository (Live)
+                baseurl=https://yum1exp.hostopia.com/yum/rpms/r10k/mail_master/repos/mail/dev/rocky/8
+                enabled=1
+                sslverify=0
+                gpgcheck=0
+                EOF
                 echo "${{ secrets.YUMREPO_CERT }}" | base64 -d > /etc/yum.repos.d/cert.pem
                 echo "${{ secrets.YUMREPO_KEY }}" | base64 -d > /etc/yum.repos.d/key.pem
-                echo "${{ secrets.YUM_REPO_YUM1EXP_LIVE_R8 }}" | base64 --decode > /etc/yum.repos.d/yum-yum1exp-live.repo
-                echo "${{ env.YUM_REPO_YUM1EXP_DEV_R8 }}" > /etc/yum.repos.d/yum-yum1exp-dev.repo
 
         - run: cat /etc/yum.conf
         - run: cat /etc/yum.repos.d/cert.pem
