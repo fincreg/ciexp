@@ -27,7 +27,7 @@ jobs:
                 sslverify=0
                 gpgcheck=0
                 EOF
-                cat <<EOF > /etc/yum.repos.d/yum-yum1exp-dev.rep
+                cat <<EOF > /etc/yum.repos.d/yum-yum1exp-dev.repo
                 [yum-yum1exp-live]
                 name=Yum1Exp RPM Repository (Live)
                 baseurl=https://yum1exp.hostopia.com/yum/rpms/r10k/mail_master/repos/mail/dev/rocky/8
