@@ -1,7 +1,7 @@
-name: Deploy production RPM
+name: Deploy RPM
 on: 
   release:
-    types: [published]
+    types: [released, prereleased]
 
 env:
   SPEC: experiment.spec 
