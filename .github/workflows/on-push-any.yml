@@ -1,12 +1,12 @@
-name: Auto build package on push
+name: Validate build package on push
 
 on:
   push:
-    branches:
-      - '**' # Trigger only on branch pushes (excludes tags)
     branches-ignore:
       - 'DEV'
       - 'QA'
+    tags-ignore:
+      - '**'
 
 jobs:
   validate:
