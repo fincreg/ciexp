@@ -30,7 +30,6 @@ jobs:
 
         - name: Build RPM/SRPM packages
           run: |
-                mkdir ${{ github.workspace }}/RPMS
                 docker build -t rpmbuild-env .
                 docker run --rm \
                   -v ${{ github.workspace }}:/src \
