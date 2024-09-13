@@ -7,8 +7,8 @@ on:
 env:
   SPEC: experiment.spec
   YUM_REPO: ${{ github.event.release.prerelease && 'stage' || 'live' }}
-  VERSION: "QA"
-  RELEASE: "${{ github.run_number }}.${{ github.sha }}"
+  VERSION: ""
+  RELEASE: ""
 
 jobs:
   build-n-deploy:
@@ -63,6 +63,6 @@ jobs:
           run: >
                 distro=${{ matrix.distro }} ;
                 for RPM in ${{ github.workspace }}/RPMS/x86_64/*.rpm; do
-                  echo "cp -v $RPM /repo/$YUM_REPO/${distro:0:5}/${distro:0-1}"
+                  cp -v $RPM /repo/$YUM_REPO/${distro:0:5}/${distro:0-1}
                 done
 
