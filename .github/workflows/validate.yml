@@ -14,7 +14,8 @@ jobs:
 
     strategy:
       matrix:
-        distro: [ 'rockylinux:8', 'rockylinux:9' ]
+        distro: [ rockylinux ]
+        version: [ 8, 9 ]
 
     steps:
         - name: Checkout project
@@ -23,7 +24,7 @@ jobs:
         - name: Setup Docker for RPM build
           run: |
                 cat <<EOF > Dockerfile
-                FROM ${{ matrix.distro }}
+                FROM ${{ matrix.distro }}:${{ matrix.version }}
                 RUN dnf -y install make rpm-build rpmdevtools dnf-plugins-core tree
                 WORKDIR /src
                 EOF
