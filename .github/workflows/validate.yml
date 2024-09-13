@@ -40,7 +40,7 @@ jobs:
                     rpmbuild -bb ${SPEC} \
                     --define 'version ${VERSION}' \
                     --define 'release ${RELEASE}' \
-                    --define '_builddir ${{ github.workspace }}'
+                    --define '_builddir /src'
                   "
                 
         - name: Show built packages
