@@ -13,7 +13,7 @@ env:
 
 jobs:
   validate:
-    uses: ./.github/workflows/validate.yml@main
+    uses: ./.github/workflows/validate.yml
 
   build-n-deploy:
     runs-on: self-hosted
