@@ -38,7 +38,9 @@ jobs:
                     rpmbuild -bb ${SPEC} \
                     --define 'version ${VERSION}' \
                     --define 'release ${RELEASE}' \
-                    --define '_builddir /src' &&
-                    tree /root/rpmbuild/RPMS
+                    --define '_builddir /src' \
+                    --define '_rpmdir /src/RPMS' &&
+                    chown -R --reference=Makefile /src/RPMS
                   "
-                
+        - name: List built packages
+          run: tree ${{ github.workspace }}/RPMS
