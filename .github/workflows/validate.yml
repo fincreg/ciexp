@@ -24,7 +24,7 @@ jobs:
           run: |
                 cat <<EOF > Dockerfile
                 FROM ${{ matrix.distro }}
-                RUN dnf -y install rpm-build rpmdevtools dnf-plugins-core
+                RUN dnf -y install make rpm-build rpmdevtools dnf-plugins-core
                 WORKDIR /src
                 EOF
 
