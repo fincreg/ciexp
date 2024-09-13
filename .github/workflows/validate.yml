@@ -41,5 +41,5 @@ jobs:
                     --define '_builddir /src'
                   "
                 echo
-                tree /root/rpmbuild/RPMS
+                tree /src/root/rpmbuild/RPMS
                 
