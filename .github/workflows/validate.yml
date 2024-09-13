@@ -1,11 +1,11 @@
-name: Auto Build RPM
+name: Validate package build
 
-on: 
+on:
   push:
 
 env:
   SPEC: experiment.spec
-  VERSION: "0.0.0"
+  VERSION: "AUTOBUILD"
   RELEASE: "${{ github.run_number }}.${{ github.sha }}"
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
     runs-on: self-hosted
 
     strategy:
-      matrix: 
+      matrix:
         distro: [ 'rockylinux:8', 'rockylinux:9' ]
 
     steps:
@@ -42,5 +42,6 @@ jobs:
                     --define '_rpmdir /src/RPMS' &&
                     chown -R --reference=Makefile /src/RPMS
                   "
+
         - name: List built packages
           run: tree ${{ github.workspace }}/RPMS

@@ -1,18 +1,18 @@
-# name: Deploy package to repository
+name: Auto deploy package to dev repository
 
 on:
-  release:
-    types: [released, prereleased]
+  push:
+    branches: [ DEV ]
+    tags: [ 'dev/**' ]
 
 env:
   SPEC: experiment.spec
-  YUM_REPO: ${{ github.event.release.prerelease && 'stage' || 'live' }}
-  VERSION: "QA"
+  YUM_REPO: dev
+  VERSION: "DEV"
   RELEASE: "${{ github.run_number }}.${{ github.sha }}"
 
 jobs:
   build-n-deploy:
-    if: match(${{ github.event.release.tag_name }}, '^([0-9]+\\.[0-9]+\\.[0-9]+)(-.+)?$')
     runs-on: self-hosted
 
     strategy:
@@ -20,16 +20,6 @@ jobs:
         distro: [ 'rockylinux:8', 'rockylinux:9' ]
 
     steps:
-        - name: Extract version and release from tag_name
-          run: >
-                if [[ ${{ github.event.release.tag_name }} =~ ^([0-9]+\.[0-9]+\.[0-9]+)(-.+)?$ ]]; then
-                  RPM_VERSION="${BASH_REMATCH[1]}"
-                  RPM_RELEASE="${BASH_REMATCH[2]:1}"
-                  if [ -z "$RPM_RELEASE" ]; then RPM_RELEASE="1"; fi
-                  echo "RPM_VERSION=$RPM_VERSION" >> $GITHUB_ENV
-                  echo "RPM_RELEASE=$RPM_RELEASE" >> $GITHUB_ENV
-                fi
-
         - name: Checkout project
           uses: actions/checkout@v3
 
@@ -59,9 +49,8 @@ jobs:
         - name: List built packages
           run: tree ${{ github.workspace }}/RPMS
 
-        - name: Upload built packages (QA)
+        - name: Upload built packages (DEV)
           run: >
                 for RPM in ${{ github.workspace }}/RPMS/x86_64/*.rpm; do
                   echo "Uploading $RPM to $YUM_REPO"
                 done
-
