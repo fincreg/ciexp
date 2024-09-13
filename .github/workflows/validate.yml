@@ -24,7 +24,7 @@ jobs:
           run: |
                 cat <<EOF > Dockerfile
                 FROM ${{ matrix.distro }}
-                RUN dnf -y install make rpm-build rpmdevtools dnf-plugins-core
+                RUN dnf -y install make rpm-build rpmdevtools dnf-plugins-core tree
                 WORKDIR /src
                 EOF
 
@@ -32,9 +32,8 @@ jobs:
           run: |
                 mkdir ${{ github.workspace }}/RPMS
                 docker build -t rpmbuild-env .
-                docker run --rm --user $(id -u):$(id -g) \
+                docker run --rm \
                   -v ${{ github.workspace }}:/src \
-                  -v ${{ github.workspace }}/RPMS:/root/rpmbuild/RPMS \
                   rpmbuild-env bash -c "
                     dnf -y builddep ${SPEC} &&
                     rpmbuild -bb ${SPEC} \
@@ -42,6 +41,6 @@ jobs:
                     --define 'release ${RELEASE}' \
                     --define '_builddir /src'
                   "
+                echo
+                tree /root/rpmbuild/RPMS
                 
-        - name: Show built packages
-          run: tree ${{ github.workspace }}/RPMS
