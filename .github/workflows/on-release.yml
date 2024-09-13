@@ -1,0 +1,68 @@
+# name: Deploy package to repository
+
+on:
+  release:
+    types: [released, prereleased]
+
+env:
+  SPEC: experiment.spec
+  YUM_REPO: ${{ github.event.release.prerelease && 'stage' || 'live' }}
+  VERSION: "QA"
+  RELEASE: "${{ github.run_number }}.${{ github.sha }}"
+
+jobs:
+  build-n-deploy:
+    if: match(${{ github.event.release.tag_name }}, '^([0-9]+\\.[0-9]+\\.[0-9]+)(-.+)?$')
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        distro: [ 'rockylinux:8', 'rockylinux:9' ]
+
+    steps:
+        - name: Extract version and release from tag_name
+          run: >
+                if [[ ${{ github.event.release.tag_name }} =~ ^([0-9]+\.[0-9]+\.[0-9]+)(-.+)?$ ]]; then
+                  RPM_VERSION="${BASH_REMATCH[1]}"
+                  RPM_RELEASE="${BASH_REMATCH[2]:1}"
+                  if [ -z "$RPM_RELEASE" ]; then RPM_RELEASE="1"; fi
+                  echo "RPM_VERSION=$RPM_VERSION" >> $GITHUB_ENV
+                  echo "RPM_RELEASE=$RPM_RELEASE" >> $GITHUB_ENV
+                fi
+
+        - name: Checkout project
+          uses: actions/checkout@v3
+
+        - name: Setup Docker for RPM build
+          run: |
+                cat <<EOF > Dockerfile
+                FROM ${{ matrix.distro }}
+                RUN dnf -y install make rpm-build rpmdevtools dnf-plugins-core tree
+                WORKDIR /src
+                EOF
+
+        - name: Build RPM/SRPM packages
+          run: |
+                docker build -t rpmbuild-env .
+                docker run --rm \
+                  -v ${{ github.workspace }}:/src \
+                  rpmbuild-env bash -c "
+                    dnf -y builddep ${SPEC} &&
+                    rpmbuild -bb ${SPEC} \
+                    --define 'version ${VERSION}' \
+                    --define 'release ${RELEASE}' \
+                    --define '_builddir /src' \
+                    --define '_rpmdir /src/RPMS' &&
+                    chown -R --reference=Makefile /src/RPMS
+                  "
+
+        - name: List built packages
+          run: tree ${{ github.workspace }}/RPMS
+
+        - name: Upload built packages (QA)
+          run: >
+                distro=${{ matrix.distro }} ;
+                for RPM in ${{ github.workspace }}/RPMS/x86_64/*.rpm; do
+                  echo "cp -v $RPM /repo/$YUM_REPO/${distro:0:5}/${distro:0-1}"
+                done
+
