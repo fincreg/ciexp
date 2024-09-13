@@ -38,8 +38,7 @@ jobs:
                     rpmbuild -bb ${SPEC} \
                     --define 'version ${VERSION}' \
                     --define 'release ${RELEASE}' \
-                    --define '_builddir /src'
+                    --define '_builddir /src' &&
+                    tree /root/rpmbuild/RPMS
                   "
-                echo
-                tree /src/root/rpmbuild/RPMS
                 
