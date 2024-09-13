@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix: 
-        distro: [ rockylinux:8, rockylinux:9 ]
+        distro: [ 'rockylinux:8', 'rockylinux:9' ]
 
     steps:
         - name: Checkout project
