@@ -12,8 +12,12 @@ env:
   RELEASE: "${{ github.run_number }}.${{ github.sha }}"
 
 jobs:
+  validate:
+    uses: ./.github/workflows/validate.yml@main
+
   build-n-deploy:
     runs-on: self-hosted
+    needs: [ validate ]
 
     strategy:
       matrix:
