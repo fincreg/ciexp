@@ -2,9 +2,6 @@ name: Validate package build
 
 on:
   workflow_call:
-  push:
-    branches:
-      - '**' # Trigger only on branch pushes (excludes tags)
 
 env:
   SPEC: experiment.spec

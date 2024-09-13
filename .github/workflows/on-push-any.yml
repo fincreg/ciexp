@@ -1,0 +1,13 @@
+name: Auto build package on push
+
+on:
+  push:
+    branches:
+      - '**' # Trigger only on branch pushes (excludes tags)
+    branches-ignore:
+      - 'DEV'
+      - 'QA'
+
+jobs:
+  validate:
+    uses: ./.github/workflows/validate.yml
