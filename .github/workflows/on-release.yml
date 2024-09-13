@@ -1,14 +1,17 @@
 name: Deploy production RPM
 on: 
   release:
-    types: [released]
+    types: [published]
+
+env:
+  SPEC: experiment.spec 
+  YUM_REPO: ${{ github.event.release.prerelease && 'stage' || 'live' }}
+
 
 jobs:
   Deploy-RPM:
     runs-on: self-hosted
-    env:
-      YUM_REPO: live
-      SPEC: experiment.spec
+    if: ${{ github.event.release.tag_name && github.event.release.tag_name matches '^([0-9]+\\.[0-9]+\\.[0-9]+)(-.+)?$' }}
     container:
       image: ghcr.io/fincreg/rockylinux:8-rpmbuild
       credentials:
@@ -18,9 +21,6 @@ jobs:
         - name: Checkout project
           uses: actions/checkout@v3
 
-        - name: Create rpmbuild structure
-          run: mkdir -p $GITHUB_WORKSPACE/{SPECS,SOURCES,BUILD,BUILDROOT,RPMS,SRPMS}
-
         - name: Bump version          
           run: >
                 rpmdev-bumpspec 
@@ -29,7 +29,7 @@ jobs:
                 -c "${{ github.event.release.body }}" 
                 $GITHUB_WORKSPACE/$SPEC
         
-        - name: Show spec
+        - name: Cat SPEC
           run: cat $GITHUB_WORKSPACE/$SPEC
 
         - name: Install dependencies
@@ -42,15 +42,8 @@ jobs:
                 --define "_builddir $GITHUB_WORKSPACE"
                 $GITHUB_WORKSPACE/$SPEC
 
-        - name: Show build packages
+        - name: Show built packages
           run: tree $GITHUB_WORKSPACE/rpmbuild/{RPMS/SRPMS}
 
         - name: Deploy packages
           run: echo "Deploying to $YUM_REPO repository"
-
-        # - name: Upload package artifacts
-        #   uses: actions/upload-artifact@v4
-        #   with:
-        #     path: |
-        #       rpmbuild/RPMS/x86_64/**
-        #       rpmbuild/SRPMS/**
