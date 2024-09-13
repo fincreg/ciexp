@@ -51,6 +51,7 @@ jobs:
 
         - name: Upload built packages (DEV)
           run: >
+                distro=${{ matrix.distro }} ;
                 for RPM in ${{ github.workspace }}/RPMS/x86_64/*.rpm; do
                   echo "cp -v $RPM /repo/$YUM_REPO/${distro:0:5}/${distro:0-1}"
                 done

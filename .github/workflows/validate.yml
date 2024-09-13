@@ -2,6 +2,8 @@ name: Validate package build
 
 on:
   push:
+    branches:
+      - '**' # Trigger only on branch pushes (excludes tags)
 
 env:
   SPEC: experiment.spec
