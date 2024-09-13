@@ -32,7 +32,7 @@ jobs:
           run: |
                 mkdir ${{ github.workspace }}/RPMS
                 docker build -t rpmbuild-env .
-                docker run --rm \
+                docker run --rm --user $(id -u):$(id -g) \
                   -v ${{ github.workspace }}:/src \
                   -v ${{ github.workspace }}/RPMS:/root/rpmbuild/RPMS \
                   rpmbuild-env bash -c "
