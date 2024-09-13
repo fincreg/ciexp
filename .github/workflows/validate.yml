@@ -1,0 +1,46 @@
+name: Auto Build RPM
+
+on: 
+  push:
+
+env:
+  SPEC: experiment.spec
+  VERSION: "0.0.0"
+  RELEASE: "${{ github.run_number }}.${{ github.sha }}"
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    strategy:
+      matrix: 
+        distro: [ rockylinux:8, rockylinux:9 ]
+
+    steps:
+        - name: Checkout project
+          uses: actions/checkout@v3
+
+        - name: Setup Docker for RPM build
+          run: |
+                cat <<EOF > Dockerfile
+                FROM ${{ matrix.distro }}
+                RUN dnf -y install rpm-build rpmdevtools dnf-plugins-core
+                WORKDIR /src
+                EOF
+
+        - name: Build RPM/SRPM packages
+          run: |
+                mkdir ${{ github.workspace }}/RPMS
+                docker build -t rpmbuild-env .
+                docker run --rm \
+                  -v ${{ github.workspace }}:/src \
+                  -v ${{ github.workspace }}/RPMS:/root/rpmbuild/RPMS \
+                  rpmbuild-env bash -c "
+                    dnf -y builddep ${SPEC} &&
+                    rpmbuild -bb ${SPEC} \
+                    --define 'version ${VERSION}' \
+                    --define 'release ${RELEASE}' \
+                  "
+                
+        - name: Show built packages
+          run: tree ${{ github.workspace }}/RPMS
