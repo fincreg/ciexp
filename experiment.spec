@@ -1,6 +1,6 @@
 Name:       experiment
 Version:    %{version}
-Release:    %{release}%{?dist}
+Release:    %{autorelease}
 Summary:    Experimental package
 
 License:    Experimental
@@ -30,5 +30,4 @@ rm -rf $RPM_BUILD_ROOT
 /opt/exp/hello
 
 %changelog
-
-
+%{autochangelog}

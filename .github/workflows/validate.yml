@@ -5,7 +5,7 @@ on:
 
 env:
   SPEC: experiment.spec
-  VERSION: "AUTOBUILD"
+  VERSION: "AUTOSPEC"
   RELEASE: "${{ github.run_number }}.${{ github.sha }}"
 
 jobs:
@@ -24,7 +24,8 @@ jobs:
           run: |
                 cat <<EOF > Dockerfile
                 FROM ${{ matrix.distro }}
-                RUN dnf -y install make rpm-build rpmdevtools dnf-plugins-core tree
+                RUN dnf -y install epel-release
+                RUN dnf -y install make rpm-build rpmdevtools rpmautospec dnf-plugins-core tree
                 WORKDIR /src
                 EOF
 
@@ -34,10 +35,11 @@ jobs:
                 docker run --rm \
                   -v ${{ github.workspace }}:/src \
                   rpmbuild-env bash -c "
+                    rpmautospec --version
+                    rpmautospec -S .
                     dnf -y builddep ${SPEC} &&
                     rpmbuild -bb ${SPEC} \
                     --define 'version ${VERSION}' \
-                    --define 'release ${RELEASE}' \
                     --define '_builddir /src' \
                     --define '_rpmdir /src/RPMS' &&
                     chown -R --reference=Makefile /src/RPMS
